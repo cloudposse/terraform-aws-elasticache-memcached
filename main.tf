@@ -1,12 +1,9 @@
 # Define composite variables for resources
-resource "null_resource" "default" {
-  triggers = {
-    id = "${lower(format("%v-%v-%v", var.namespace, var.stage, var.name))}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
+module "label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=init"
+  namespace = "${var.namespace}"
+  name      = "${var.name}"
+  stage     = "${var.stage}"
 }
 
 resource "null_resource" "host" {
@@ -26,7 +23,7 @@ resource "null_resource" "host" {
 #
 resource "aws_security_group" "default" {
   vpc_id = "${var.vpc_id}"
-  name   = "${null_resource.default.triggers.id}"
+  name   = "${module.label.value}"
 
   ingress {
     from_port       = "11211"                    # Memcache
@@ -43,19 +40,19 @@ resource "aws_security_group" "default" {
   }
 
   tags {
-    Name      = "${null_resource.default.triggers.id}"
+    Name      = "${module.label.value}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
 }
 
 resource "aws_elasticache_subnet_group" "default" {
-  name       = "${null_resource.default.triggers.id}"
+  name       = "${module.label.value}"
   subnet_ids = ["${var.subnets}"]
 }
 
 resource "aws_elasticache_parameter_group" "default" {
-  name   = "${null_resource.default.triggers.id}"
+  name   = "${module.label.value}"
   family = "memcached1.4"
 
   parameter {
@@ -68,7 +65,7 @@ resource "aws_elasticache_parameter_group" "default" {
 # ElastiCache Resources
 #
 resource "aws_elasticache_cluster" "default" {
-  cluster_id             = "${null_resource.default.triggers.id}"
+  cluster_id             = "${module.label.value}"
   engine                 = "memcached"
   engine_version         = "${var.engine_version}"
   node_type              = "${var.instance_type}"
@@ -83,7 +80,7 @@ resource "aws_elasticache_cluster" "default" {
   availability_zones     = ["${slice(var.availability_zones, 0, var.cluster_size)}"]
 
   tags {
-    Name      = "${null_resource.default.triggers.id}"
+    Name      = "${module.label.value}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -93,7 +90,7 @@ resource "aws_elasticache_cluster" "default" {
 # CloudWatch Resources
 #
 resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
-  alarm_name          = "${null_resource.default.triggers.id}-cpu-utilization"
+  alarm_name          = "${module.label.value}-cpu-utilization"
   alarm_description   = "Memcached cluster CPU utilization"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
@@ -105,7 +102,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
   threshold = "${var.alarm_cpu_threshold_percent}"
 
   dimensions {
-    CacheClusterId = "${null_resource.default.triggers.id}"
+    CacheClusterId = "${module.label.value}"
   }
 
   alarm_actions = ["${var.alarm_actions}"]
@@ -113,7 +110,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
-  alarm_name          = "${null_resource.default.triggers.id}-freeable-memory"
+  alarm_name          = "${module.label.value}-freeable-memory"
   alarm_description   = "Memcached cluster freeable memory"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
@@ -125,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   threshold = "${var.alarm_memory_threshold_bytes}"
 
   dimensions {
-    CacheClusterId = "${null_resource.default.triggers.id}"
+    CacheClusterId = "${module.label.value}"
   }
 
   alarm_actions = ["${var.alarm_actions}"]

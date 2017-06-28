@@ -23,7 +23,7 @@ resource "null_resource" "host" {
 #
 resource "aws_security_group" "default" {
   vpc_id = "${var.vpc_id}"
-  name   = "${module.label.value}"
+  name   = "${module.label.id}"
 
   ingress {
     from_port       = "11211"                    # Memcache
@@ -40,19 +40,19 @@ resource "aws_security_group" "default" {
   }
 
   tags {
-    Name      = "${module.label.value}"
+    Name      = "${module.label.id}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
 }
 
 resource "aws_elasticache_subnet_group" "default" {
-  name       = "${module.label.value}"
+  name       = "${module.label.id}"
   subnet_ids = ["${var.subnets}"]
 }
 
 resource "aws_elasticache_parameter_group" "default" {
-  name   = "${module.label.value}"
+  name   = "${module.label.id}"
   family = "memcached1.4"
 
   parameter {
@@ -65,7 +65,7 @@ resource "aws_elasticache_parameter_group" "default" {
 # ElastiCache Resources
 #
 resource "aws_elasticache_cluster" "default" {
-  cluster_id             = "${module.label.value}"
+  cluster_id             = "${module.label.id}"
   engine                 = "memcached"
   engine_version         = "${var.engine_version}"
   node_type              = "${var.instance_type}"
@@ -80,7 +80,7 @@ resource "aws_elasticache_cluster" "default" {
   availability_zones     = ["${slice(var.availability_zones, 0, var.cluster_size)}"]
 
   tags {
-    Name      = "${module.label.value}"
+    Name      = "${module.label.id}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -90,7 +90,7 @@ resource "aws_elasticache_cluster" "default" {
 # CloudWatch Resources
 #
 resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
-  alarm_name          = "${module.label.value}-cpu-utilization"
+  alarm_name          = "${module.label.id}-cpu-utilization"
   alarm_description   = "Memcached cluster CPU utilization"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
@@ -102,7 +102,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
   threshold = "${var.alarm_cpu_threshold_percent}"
 
   dimensions {
-    CacheClusterId = "${module.label.value}"
+    CacheClusterId = "${module.label.id}"
   }
 
   alarm_actions = ["${var.alarm_actions}"]
@@ -110,7 +110,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
-  alarm_name          = "${module.label.value}-freeable-memory"
+  alarm_name          = "${module.label.id}-freeable-memory"
   alarm_description   = "Memcached cluster freeable memory"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
@@ -122,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   threshold = "${var.alarm_memory_threshold_bytes}"
 
   dimensions {
-    CacheClusterId = "${module.label.value}"
+    CacheClusterId = "${module.label.id}"
   }
 
   alarm_actions = ["${var.alarm_actions}"]

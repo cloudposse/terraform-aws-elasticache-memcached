@@ -1,6 +1,6 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=init"
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.1.0"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -130,7 +130,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 }
 
 module "dns" {
-  source    = "../hostname"
+  source    = "git::https://github.com/cloudposse/tf_hostname.git?ref=tags/0.1.0"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -140,7 +140,7 @@ module "dns" {
 }
 
 module "dns_config" {
-  source    = "../hostname"
+  source    = "git::https://github.com/cloudposse/tf_hostname.git?ref=tags/0.1.0"
   namespace = "${var.namespace}"
   name      = "config.${var.name}"
   stage     = "${var.stage}"

@@ -1,6 +1,6 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=tags/0.1.0"
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -39,11 +39,7 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
-    Name      = "${module.label.id}"
-    Namespace = "${var.namespace}"
-    Stage     = "${var.stage}"
-  }
+  tags = "${module.label.tags}"
 }
 
 resource "aws_elasticache_subnet_group" "default" {
@@ -79,11 +75,7 @@ resource "aws_elasticache_cluster" "default" {
   az_mode                = "${var.cluster_size == 1 ? "single-az" : "cross-az" }"
   availability_zones     = ["${slice(var.availability_zones, 0, var.cluster_size)}"]
 
-  tags {
-    Name      = "${module.label.id}"
-    Namespace = "${var.namespace}"
-    Stage     = "${var.stage}"
-  }
+  tags = "${module.label.tags}"
 }
 
 #
@@ -130,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 }
 
 module "dns" {
-  source    = "git::https://github.com/cloudposse/tf_hostname.git?ref=tags/0.1.0"
+  source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.1.1"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -140,7 +132,7 @@ module "dns" {
 }
 
 module "dns_config" {
-  source    = "git::https://github.com/cloudposse/tf_hostname.git?ref=tags/0.1.0"
+  source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.1.1"
   namespace = "${var.namespace}"
   name      = "config.${var.name}"
   stage     = "${var.stage}"

@@ -1,0 +1,52 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: terraform-aws-elasticache-memcached
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/terraform-aws-elasticache-memcached
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://travis-ci.org/cloudposse/terraform-aws-elasticache-memcached.svg?branch=master"
+    url: "https://travis-ci.org/cloudposse/terraform-aws-elasticache-memcached"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/terraform-aws-elasticache-memcached.svg"
+    url: "https://github.com/cloudposse/terraform-aws-elasticache-memcached/releases/latest"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+related:
+  - name: "terraform-aws-elasticache-redis"
+    description: "Terraform module to provision an ElastiCache Redis Cluster"
+    url: "https://github.com/cloudposse/terraform-aws-elasticache-redis"
+  - name: "terraform-aws-elasticache-cloudwatch-sns-alarms"
+    description: "Terraform module that configures CloudWatch SNS alerts for ElastiCache"
+    url: "https://github.com/cloudposse/terraform-aws-elasticache-cloudwatch-sns-alarms"
+
+# Short description of this project
+description: |-
+  Terraform module to provision an [`ElastiCache`](https://aws.amazon.com/elasticache/) Memcached Cluster
+
+include:
+  - "docs/targets.md"
+  - "docs/terraform.md"
+
+# Contributors to this project
+contributors:
+  - name: "Igor Rodionov"
+    github: "goruha"
+  - name: "Andriy Knysh"
+    github: "aknysh"

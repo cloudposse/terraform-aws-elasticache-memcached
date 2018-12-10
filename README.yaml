@@ -7,6 +7,19 @@
 # Name of this project
 name: terraform-aws-elasticache-memcached
 
+# Tags of this project
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - databases
+  - memcached
+  - elasticache
+
+# Categories of this project
+categories:
+  - terraform-modules/databases
+
 # Logo for this project
 #logo: docs/logo.png
 

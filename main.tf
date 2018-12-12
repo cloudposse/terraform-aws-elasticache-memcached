@@ -61,21 +61,20 @@ resource "aws_elasticache_parameter_group" "default" {
 # ElastiCache Resources
 #
 resource "aws_elasticache_cluster" "default" {
-  cluster_id             = "${module.label.id}"
-  engine                 = "memcached"
-  engine_version         = "${var.engine_version}"
-  node_type              = "${var.instance_type}"
-  num_cache_nodes        = "${var.cluster_size}"
-  parameter_group_name   = "${aws_elasticache_parameter_group.default.name}"
-  subnet_group_name      = "${aws_elasticache_subnet_group.default.name}"
-  security_group_ids     = ["${aws_security_group.default.id}"]
-  maintenance_window     = "${var.maintenance_window}"
-  notification_topic_arn = "${var.notification_topic_arn}"
-  port                   = "11211"
-  az_mode                = "${var.cluster_size == 1 ? "single-az" : "cross-az" }"
-  availability_zones     = ["${slice(var.availability_zones, 0, var.cluster_size)}"]
-
-  tags = "${module.label.tags}"
+  cluster_id                   = "${module.label.id}"
+  engine                       = "memcached"
+  engine_version               = "${var.engine_version}"
+  node_type                    = "${var.instance_type}"
+  num_cache_nodes              = "${var.cluster_size}"
+  parameter_group_name         = "${aws_elasticache_parameter_group.default.name}"
+  subnet_group_name            = "${aws_elasticache_subnet_group.default.name}"
+  security_group_ids           = ["${aws_security_group.default.id}"]
+  maintenance_window           = "${var.maintenance_window}"
+  notification_topic_arn       = "${var.notification_topic_arn}"
+  port                         = "11211"
+  az_mode                      = "${var.cluster_size == 1 ? "single-az" : "cross-az" }"
+  preferred_availability_zones = ["${slice(var.availability_zones, 0, var.cluster_size)}"]
+  tags                         = "${module.label.tags}"
 }
 
 #

@@ -29,6 +29,6 @@ output "config_hostname" {
 }
 
 output "cluster_urls" {
-  value       = null_resource.cluster_urls.triggers.name[*]
+  value       = null_resource.cluster_urls.*.triggers.name
   description = "Cluster URLs"
 }

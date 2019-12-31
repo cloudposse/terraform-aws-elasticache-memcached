@@ -9,7 +9,7 @@ module "label" {
   tags       = var.tags
 }
 
-resource "null_resource" "host" {
+resource "null_resource" "cluster_urls" {
   count = var.enabled ? var.cluster_size : 0
 
   triggers = {
@@ -81,7 +81,7 @@ resource "aws_elasticache_subnet_group" "default" {
 resource "aws_elasticache_parameter_group" "default" {
   count  = var.enabled ? 1 : 0
   name   = module.label.id
-  family = "memcached1.4"
+  family = var.elasticache_parameter_group_family
 
   parameter {
     name  = "max_item_size"
@@ -160,8 +160,8 @@ module "dns" {
   source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.3.0"
   enabled   = var.enabled && var.zone_id != "" ? true : false
   namespace = var.namespace
-  name      = var.name
   stage     = var.stage
+  name      = var.name
   ttl       = 60
   zone_id   = var.zone_id
   records   = aws_elasticache_cluster.default.cluster_address[*]
@@ -171,8 +171,8 @@ module "dns_config" {
   source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.3.0"
   enabled   = var.enabled && var.zone_id != "" ? true : false
   namespace = var.namespace
-  name      = "config.${var.name}"
   stage     = var.stage
+  name      = "config.${var.name}"
   ttl       = 60
   zone_id   = var.zone_id
   records   = aws_elasticache_cluster.default.configuration_endpoint[*]

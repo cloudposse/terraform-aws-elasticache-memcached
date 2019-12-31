@@ -12,6 +12,7 @@
 | availability_zones | List of Availability Zones where subnets will be created | list(string) | - | yes |
 | cluster_size | Cluster size | number | `1` | no |
 | delimiter | Delimiter between `name`, `namespace`, `stage` and `attributes` | string | `-` | no |
+| elasticache_parameter_group_family | ElastiCache parameter group family | string | `memcached1.4` | no |
 | elasticache_subnet_group_name | Subnet group name for the ElastiCache instance | string | `` | no |
 | enabled | Set to false to prevent the module from creating any resources | bool | `true` | no |
 | engine_version | Engine version | string | `1.4.33` | no |
@@ -35,8 +36,11 @@
 
 | Name | Description |
 |------|-------------|
-| config_host | Cluster configuration endpoint hostname |
-| hosts | Cluster hosts |
-| id | Cluster ID |
+| cluster_address | Cluster address |
+| cluster_configuration_endpoint | Cluster configuration endpoint |
+| cluster_id | Cluster ID |
+| cluster_urls | Cluster URLs |
+| config_hostname | Cluster configuration hostname |
+| hostname | Cluster hostname |
 | security_group_id | Security Group ID |
 

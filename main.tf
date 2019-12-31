@@ -162,7 +162,7 @@ module "dns" {
   name    = var.name
   ttl     = 60
   zone_id = var.zone_id
-  records = aws_elasticache_cluster.default.cluster_address[*]
+  records = [join("", aws_elasticache_cluster.default.*.cluster_address)]
 }
 
 module "dns_config" {
@@ -171,5 +171,5 @@ module "dns_config" {
   name    = "config.${var.name}"
   ttl     = 60
   zone_id = var.zone_id
-  records = aws_elasticache_cluster.default.configuration_endpoint[*]
+  records = [join("", aws_elasticache_cluster.default.*.configuration_endpoint)]
 }

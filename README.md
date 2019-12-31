@@ -115,28 +115,24 @@ For automated tests of the complete example using [bats](https://github.com/bats
     vpc_id               = module.vpc.vpc_id
     igw_id               = module.vpc.igw_id
     cidr_block           = module.vpc.vpc_cidr_block
-    nat_gateway_enabled  = true
+    nat_gateway_enabled  = false
     nat_instance_enabled = false
   }
 
   module "memcached" {
-    source                     = "git::https://github.com/cloudposse/terraform-aws-elasticache-memcached.git?ref=master"
-    availability_zones         = var.availability_zones
-    namespace                  = var.namespace
-    stage                      = var.stage
-    name                       = var.name
-    zone_id                    = var.zone_id
-    vpc_id                     = module.vpc.vpc_id
-    allowed_security_groups    = [module.vpc.vpc_default_security_group_id]
-    subnets                    = module.subnets.private_subnet_ids
-    cluster_size               = var.cluster_size
-    instance_type              = var.instance_type
-    apply_immediately          = true
-    automatic_failover         = false
-    engine_version             = var.engine_version
-    family                     = var.family
-    at_rest_encryption_enabled = var.at_rest_encryption_enabled
-    transit_encryption_enabled = var.transit_encryption_enabled
+    source                  = "git::https://github.com/cloudposse/terraform-aws-elasticache-memcached.git?ref=master"
+    namespace               = var.namespace
+    stage                   = var.stage
+    name                    = var.name
+    availability_zones      = var.availability_zones
+    vpc_id                  = module.vpc.vpc_id
+    allowed_security_groups = [module.vpc.vpc_default_security_group_id]
+    subnets                 = module.subnets.private_subnet_ids
+    cluster_size            = var.cluster_size
+    instance_type           = var.instance_type
+    engine_version          = var.engine_version
+    apply_immediately       = true
+    zone_id                 = var.zone_id
   }
 ```
 
@@ -170,22 +166,21 @@ Available targets:
 | allowed_security_groups | List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module | list(string) | `<list>` | no |
 | apply_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window | bool | `true` | no |
 | attributes | Additional attributes (_e.g._ "1") | list(string) | `<list>` | no |
-| availability_zones | List of Availability Zones where subnets will be created | list(string) | - | yes |
+| availability_zones | List of Availability Zones for the cluster | list(string) | - | yes |
 | cluster_size | Cluster size | number | `1` | no |
 | delimiter | Delimiter between `name`, `namespace`, `stage` and `attributes` | string | `-` | no |
 | elasticache_parameter_group_family | ElastiCache parameter group family | string | `memcached1.4` | no |
 | elasticache_subnet_group_name | Subnet group name for the ElastiCache instance | string | `` | no |
 | enabled | Set to false to prevent the module from creating any resources | bool | `true` | no |
-| engine_version | Engine version | string | `1.4.33` | no |
+| engine_version | Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html | string | `1.5.16` | no |
 | existing_security_groups | List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the cluster | list(string) | `<list>` | no |
-| instance_type | Elastic cache instance type | string | `t2.micro` | no |
+| instance_type | Elastic cache instance type | string | `cache.t2.micro` | no |
 | maintenance_window | Maintenance window | string | `wed:03:00-wed:04:00` | no |
 | max_item_size | Max item size | number | `10485760` | no |
 | name | Name of the application | string | - | yes |
 | namespace | Namespace (e.g. `eg` or `cp`) | string | `` | no |
 | notification_topic_arn | Notification topic arn | string | `` | no |
 | port | Memcached port | number | `11211` | no |
-| security_groups | AWS security group IDs | list(string) | - | yes |
 | stage | Stage (e.g. `prod`, `dev`, `staging`) | string | `` | no |
 | subnets | AWS subnet ids | list(string) | `<list>` | no |
 | tags | Additional tags (_e.g._ map("BusinessUnit","ABC") | map(string) | `<map>` | no |

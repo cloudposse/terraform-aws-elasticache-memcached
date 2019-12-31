@@ -12,7 +12,7 @@
 | availability_zones | List of Availability Zones for the cluster | list(string) | - | yes |
 | cluster_size | Cluster size | number | `1` | no |
 | delimiter | Delimiter between `name`, `namespace`, `stage` and `attributes` | string | `-` | no |
-| elasticache_parameter_group_family | ElastiCache parameter group family | string | `memcached1.4` | no |
+| elasticache_parameter_group_family | ElastiCache parameter group family | string | `memcached1.5` | no |
 | elasticache_subnet_group_name | Subnet group name for the ElastiCache instance | string | `` | no |
 | enabled | Set to false to prevent the module from creating any resources | bool | `true` | no |
 | engine_version | Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html | string | `1.5.16` | no |

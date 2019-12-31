@@ -166,5 +166,5 @@ variable "elasticache_subnet_group_name" {
 variable "elasticache_parameter_group_family" {
   type        = string
   description = "ElastiCache parameter group family"
-  default     = "memcached1.4"
+  default     = "memcached1.5"
 }

@@ -196,7 +196,6 @@ Available targets:
 | cluster_configuration_endpoint | Cluster configuration endpoint |
 | cluster_id | Cluster ID |
 | cluster_urls | Cluster URLs |
-| config_hostname | Cluster configuration hostname |
 | hostname | Cluster hostname |
 | security_group_id | Security Group ID |
 

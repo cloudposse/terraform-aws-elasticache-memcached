@@ -164,12 +164,3 @@ module "dns" {
   zone_id = var.zone_id
   records = [join("", aws_elasticache_cluster.default.*.cluster_address)]
 }
-
-module "dns_config" {
-  source  = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.3.0"
-  enabled = var.enabled && var.zone_id != "" ? true : false
-  name    = "config.${var.name}"
-  ttl     = 60
-  zone_id = var.zone_id
-  records = [join("", aws_elasticache_cluster.default.*.configuration_endpoint)]
-}

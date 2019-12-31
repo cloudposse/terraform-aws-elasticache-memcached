@@ -23,11 +23,6 @@ output "hostname" {
   description = "Cluster hostname"
 }
 
-output "config_hostname" {
-  value       = module.dns_config.hostname
-  description = "Cluster configuration hostname"
-}
-
 output "cluster_urls" {
   value       = null_resource.cluster_urls.*.triggers.name
   description = "Cluster URLs"

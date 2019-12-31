@@ -38,11 +38,6 @@ output "hostname" {
   description = "Cluster hostname"
 }
 
-output "config_hostname" {
-  value       = module.memcached.config_hostname
-  description = "Cluster configuration hostname"
-}
-
 output "cluster_urls" {
   value       = module.memcached.cluster_urls
   description = "Cluster URLs"

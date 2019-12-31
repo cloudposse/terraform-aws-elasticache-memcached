@@ -49,11 +49,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "security_groups" {
-  type        = list(string)
-  description = "AWS security group IDs"
-}
-
 variable "vpc_id" {
   type        = string
   default     = ""

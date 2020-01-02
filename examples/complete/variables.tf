@@ -4,6 +4,16 @@ variable "enabled" {
   default     = true
 }
 
+variable "region" {
+  type        = string
+  description = "AWS region"
+}
+
+variable "availability_zones" {
+  type        = list(string)
+  description = "Availability zone IDs"
+}
+
 variable "namespace" {
   type        = string
   description = "Namespace (e.g. `eg` or `cp`)"
@@ -109,11 +119,6 @@ variable "apply_immediately" {
   type        = bool
   default     = true
   description = "Specifies whether any database modifications are applied immediately, or during the next maintenance window"
-}
-
-variable "availability_zones" {
-  type        = list(string)
-  description = "List of Availability Zones for the cluster"
 }
 
 variable "zone_id" {

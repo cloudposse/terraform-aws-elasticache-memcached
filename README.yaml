@@ -31,9 +31,9 @@ github_repo: cloudposse/terraform-aws-elasticache-memcached
 
 # Badges to display
 badges:
-  - name: "Build Status"
-    image: "https://travis-ci.org/cloudposse/terraform-aws-elasticache-memcached.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/terraform-aws-elasticache-memcached"
+  - name: "Codefresh Build Status"
+    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-elasticache-memcached?type=cf-1"
+    url: "https%3A%2F%2Fg.codefresh.io%2Fpublic%2Faccounts%2Fcloudposse%2Fpipelines%2F5e0a73156baea5f1b7de7ce0"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-elasticache-memcached.svg"
     url: "https://github.com/cloudposse/terraform-aws-elasticache-memcached/releases/latest"
@@ -53,6 +53,59 @@ related:
 description: |-
   Terraform module to provision an [`ElastiCache`](https://aws.amazon.com/elasticache/) Memcached Cluster
 
+# How to use this project
+usage: |-
+
+  For a complete example, see [examples/complete](examples/complete).
+
+  For automated tests of the complete example using [bats](https://github.com/bats-core/bats-core) and [Terratest](https://github.com/gruntwork-io/terratest) (which tests and deploys the example on AWS), see [test](test).
+
+  ```hcl
+    provider "aws" {
+      region = var.region
+    }
+
+    module "vpc" {
+      source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.1"
+      namespace  = var.namespace
+      stage      = var.stage
+      name       = var.name
+      cidr_block = "172.16.0.0/16"
+    }
+
+    module "subnets" {
+      source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.18.1"
+      availability_zones   = var.availability_zones
+      namespace            = var.namespace
+      stage                = var.stage
+      name                 = var.name
+      vpc_id               = module.vpc.vpc_id
+      igw_id               = module.vpc.igw_id
+      cidr_block           = module.vpc.vpc_cidr_block
+      nat_gateway_enabled  = false
+      nat_instance_enabled = false
+    }
+
+    module "memcached" {
+      source                  = "git::https://github.com/cloudposse/terraform-aws-elasticache-memcached.git?ref=master"
+      namespace               = var.namespace
+      stage                   = var.stage
+      name                    = var.name
+      availability_zones      = var.availability_zones
+      vpc_id                  = module.vpc.vpc_id
+      allowed_security_groups = [module.vpc.vpc_default_security_group_id]
+      subnets                 = module.subnets.private_subnet_ids
+      cluster_size            = var.cluster_size
+      instance_type           = var.instance_type
+      engine_version          = var.engine_version
+      apply_immediately       = true
+      zone_id                 = var.zone_id
+    }
+  ```
+
+examples: |-
+  Review the [complete example](examples/simple) to see how to use this module.
+
 include:
   - "docs/targets.md"
   - "docs/terraform.md"
@@ -63,3 +116,5 @@ contributors:
     github: "goruha"
   - name: "Andriy Knysh"
     github: "aknysh"
+  - name: "Erik Osterman"
+    github: "osterman"

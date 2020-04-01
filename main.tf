@@ -73,7 +73,7 @@ resource "aws_security_group_rule" "ingress_cidr_blocks" {
 # ElastiCache Resources
 #
 resource "aws_elasticache_subnet_group" "default" {
-  count      = var.enabled ? 1 : 0
+  count      = var.enabled && var.elasticache_subnet_group_name == "" ? 1 : 0
   name       = module.label.id
   subnet_ids = var.subnets
 }

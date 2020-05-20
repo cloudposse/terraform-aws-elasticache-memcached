@@ -110,6 +110,12 @@ resource "aws_elasticache_cluster" "default" {
   az_mode                      = var.cluster_size == 1 ? "single-az" : "cross-az"
   preferred_availability_zones = [for i in range(var.cluster_size) : element(var.availability_zones, i)]
   tags                         = module.label.tags
+
+  lifecycle {
+    ignore_changes = [
+      preferred_availability_zones, # Ignore this because drift detection is not supported an TF will show a perpetual difference.
+    ]
+  }
 }
 
 #

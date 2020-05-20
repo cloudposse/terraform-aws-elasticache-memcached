@@ -79,7 +79,7 @@ resource "aws_elasticache_subnet_group" "default" {
 }
 
 resource "aws_elasticache_parameter_group" "default" {
-  count  = var.enabled ? 1 : 0
+  count  = var.enabled && ! var.use_existing_parameter_group ? 1 : 0
   name   = module.label.id
   family = var.elasticache_parameter_group_family
 
@@ -90,7 +90,8 @@ resource "aws_elasticache_parameter_group" "default" {
 }
 
 locals {
-  elasticache_subnet_group_name = var.elasticache_subnet_group_name != "" ? var.elasticache_subnet_group_name : join("", aws_elasticache_subnet_group.default.*.name)
+  elasticache_subnet_group_name    = var.elasticache_subnet_group_name != "" ? var.elasticache_subnet_group_name : join("", aws_elasticache_subnet_group.default.*.name)
+  elasticache_parameter_group_name = var.use_existing_parameter_group ? var.elasticache_parameter_group_name : join("", aws_elasticache_parameter_group.default.*.name)
 }
 
 resource "aws_elasticache_cluster" "default" {
@@ -100,7 +101,7 @@ resource "aws_elasticache_cluster" "default" {
   engine_version               = var.engine_version
   node_type                    = var.instance_type
   num_cache_nodes              = var.cluster_size
-  parameter_group_name         = join("", aws_elasticache_parameter_group.default.*.name)
+  parameter_group_name         = local.elasticache_parameter_group_name
   subnet_group_name            = local.elasticache_subnet_group_name
   security_group_ids           = var.use_existing_security_groups ? var.existing_security_groups : [join("", aws_security_group.default.*.id)]
   maintenance_window           = var.maintenance_window

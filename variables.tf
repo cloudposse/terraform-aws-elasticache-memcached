@@ -163,3 +163,15 @@ variable "elasticache_parameter_group_family" {
   description = "ElastiCache parameter group family"
   default     = "memcached1.5"
 }
+
+variable "use_existing_parameter_group" {
+  type        = bool
+  description = "If true, will use the parameter group in elasticache_parameter_group_name."
+  default     = false
+}
+
+variable "elasticache_parameter_group_name" {
+  type        = string
+  description = "Existing parameter group for Elasticache instance."
+  default     = null
+}

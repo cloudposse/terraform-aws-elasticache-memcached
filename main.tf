@@ -138,8 +138,10 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
     CacheClusterId = module.label.id
   }
 
-  alarm_actions = var.alarm_actions
-  depends_on    = [aws_elasticache_cluster.default]
+  alarm_actions             = var.alarm_actions
+  ok_actions                = var.ok_actions
+  insufficient_data_actions = var.insufficient_data_actions
+  depends_on                = [aws_elasticache_cluster.default]
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
@@ -159,8 +161,10 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
     CacheClusterId = module.label.id
   }
 
-  alarm_actions = var.alarm_actions
-  depends_on    = [aws_elasticache_cluster.default]
+  alarm_actions             = var.alarm_actions
+  ok_actions                = var.ok_actions
+  insufficient_data_actions = var.insufficient_data_actions
+  depends_on                = [aws_elasticache_cluster.default]
 }
 
 module "dns" {

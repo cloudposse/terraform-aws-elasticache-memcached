@@ -100,9 +100,21 @@ variable "alarm_memory_threshold_bytes" {
 }
 
 variable "alarm_actions" {
+  description = "List of actions to trigger when a Cloudwatch alarm goes into the ALARM state."
   type        = list(string)
   default     = []
-  description = "Alarm actions"
+}
+
+variable "ok_actions" {
+  description = "List of actions to trigger when a Cloudwatch alarm goes into the OK state."
+  type        = list(string)
+  default     = []
+}
+
+variable "insufficient_data_actions" {
+  description = "List of actions to trigger when the alarm does not have sufficient data."
+  type        = list(string)
+  default     = []
 }
 
 variable "apply_immediately" {

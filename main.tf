@@ -96,6 +96,7 @@ locals {
 
 resource "aws_elasticache_cluster" "default" {
   count                        = var.enabled ? 1 : 0
+  apply_immediately            = var.apply_immediately
   cluster_id                   = module.label.id
   engine                       = "memcached"
   engine_version               = var.engine_version

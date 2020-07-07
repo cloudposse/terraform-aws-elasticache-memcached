@@ -44,7 +44,7 @@
 
 # terraform-aws-elasticache-memcached
 
- [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-elasticache-memcached?type=cf-1)](https%3A%2F%2Fg.codefresh.io%2Fpublic%2Faccounts%2Fcloudposse%2Fpipelines%2F5e0a73156baea5f1b7de7ce0) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-elasticache-memcached.svg)](https://github.com/cloudposse/terraform-aws-elasticache-memcached/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+ [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-elasticache-memcached.svg)](https://github.com/cloudposse/terraform-aws-elasticache-memcached/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module to provision an [`ElastiCache`](https://aws.amazon.com/elasticache/) Memcached Cluster
@@ -155,49 +155,64 @@ Available targets:
   lint                                Lint terraform code
 
 ```
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | ~> 0.12.0 |
+| aws | ~> 2.0 |
+| null | ~> 2.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | ~> 2.0 |
+| null | ~> 2.0 |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| alarm_actions | Alarm actions | list(string) | `<list>` | no |
-| alarm_cpu_threshold_percent | CPU threshold alarm level | number | `75` | no |
-| alarm_memory_threshold_bytes | Alarm memory threshold bytes | number | `10000000` | no |
-| allowed_cidr_blocks | List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module | list(string) | `<list>` | no |
-| allowed_security_groups | List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module | list(string) | `<list>` | no |
-| apply_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window | bool | `true` | no |
-| attributes | Additional attributes (_e.g._ "1") | list(string) | `<list>` | no |
-| availability_zones | List of Availability Zones for the cluster | list(string) | - | yes |
-| cluster_size | Cluster size | number | `1` | no |
-| delimiter | Delimiter between `name`, `namespace`, `stage` and `attributes` | string | `-` | no |
-| elasticache_parameter_group_family | ElastiCache parameter group family | string | `memcached1.5` | no |
-| elasticache_subnet_group_name | Subnet group name for the ElastiCache instance | string | `` | no |
-| enabled | Set to false to prevent the module from creating any resources | bool | `true` | no |
-| engine_version | Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html | string | `1.5.16` | no |
-| existing_security_groups | List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the cluster | list(string) | `<list>` | no |
-| instance_type | Elastic cache instance type | string | `cache.t2.micro` | no |
-| maintenance_window | Maintenance window | string | `wed:03:00-wed:04:00` | no |
-| max_item_size | Max item size | number | `10485760` | no |
-| name | Name of the application | string | - | yes |
-| namespace | Namespace (e.g. `eg` or `cp`) | string | `` | no |
-| notification_topic_arn | Notification topic arn | string | `` | no |
-| port | Memcached port | number | `11211` | no |
-| stage | Stage (e.g. `prod`, `dev`, `staging`) | string | `` | no |
-| subnets | AWS subnet ids | list(string) | `<list>` | no |
-| tags | Additional tags (_e.g._ map("BusinessUnit","ABC") | map(string) | `<map>` | no |
-| use_existing_security_groups | Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the cluster into | bool | `false` | no |
-| vpc_id | VPC ID | string | `` | no |
-| zone_id | Route53 DNS Zone ID | string | `` | no |
+|------|-------------|------|---------|:--------:|
+| alarm\_actions | Alarm actions | `list(string)` | `[]` | no |
+| alarm\_cpu\_threshold\_percent | CPU threshold alarm level | `number` | `75` | no |
+| alarm\_memory\_threshold\_bytes | Alarm memory threshold bytes | `number` | `10000000` | no |
+| allowed\_cidr\_blocks | List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module | `list(string)` | `[]` | no |
+| allowed\_security\_groups | List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module | `list(string)` | `[]` | no |
+| apply\_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window | `bool` | `true` | no |
+| attributes | Additional attributes (\_e.g.\_ "1") | `list(string)` | `[]` | no |
+| availability\_zones | List of Availability Zones for the cluster | `list(string)` | n/a | yes |
+| cluster\_size | Cluster size | `number` | `1` | no |
+| delimiter | Delimiter between `name`, `namespace`, `stage` and `attributes` | `string` | `"-"` | no |
+| elasticache\_parameter\_group\_family | ElastiCache parameter group family | `string` | `"memcached1.5"` | no |
+| elasticache\_subnet\_group\_name | Subnet group name for the ElastiCache instance | `string` | `""` | no |
+| enabled | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
+| engine\_version | Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html | `string` | `"1.5.16"` | no |
+| existing\_security\_groups | List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the cluster | `list(string)` | `[]` | no |
+| instance\_type | Elastic cache instance type | `string` | `"cache.t2.micro"` | no |
+| maintenance\_window | Maintenance window | `string` | `"wed:03:00-wed:04:00"` | no |
+| max\_item\_size | Max item size | `number` | `10485760` | no |
+| name | Name of the application | `string` | n/a | yes |
+| namespace | Namespace (e.g. `eg` or `cp`) | `string` | `""` | no |
+| notification\_topic\_arn | Notification topic arn | `string` | `""` | no |
+| port | Memcached port | `number` | `11211` | no |
+| stage | Stage (e.g. `prod`, `dev`, `staging`) | `string` | `""` | no |
+| subnets | AWS subnet ids | `list(string)` | `[]` | no |
+| tags | Additional tags (\_e.g.\_ map("BusinessUnit","ABC") | `map(string)` | `{}` | no |
+| use\_existing\_security\_groups | Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the cluster into | `bool` | `false` | no |
+| vpc\_id | VPC ID | `string` | `""` | no |
+| zone\_id | Route53 DNS Zone ID | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| cluster_address | Cluster address |
-| cluster_configuration_endpoint | Cluster configuration endpoint |
-| cluster_id | Cluster ID |
-| cluster_urls | Cluster URLs |
+| cluster\_address | Cluster address |
+| cluster\_configuration\_endpoint | Cluster configuration endpoint |
+| cluster\_id | Cluster ID |
+| cluster\_urls | Cluster URLs |
 | hostname | Cluster hostname |
-| security_group_id | Security Group ID |
+| security\_group\_id | Security Group ID |
 
 
 
@@ -252,6 +267,10 @@ We deliver 10x the value for a fraction of the cost of a full-time engineer. Our
 
 Join our [Open Source Community][slack] on Slack. It's **FREE** for everyone! Our "SweetOps" community is where you get to talk with others who share a similar vision for how to rollout and manage infrastructure. This is the best place to talk shop, ask questions, solicit feedback, and work together as a community to build totally *sweet* infrastructure.
 
+## Discourse Forums
+
+Participate in our [Discourse Forums][discourse]. Here you'll find answers to commonly asked questions. Most questions will be related to the enormous number of projects we support on our GitHub. Come here to collaborate on answers, find solutions, and get ideas about the products and services we value. It only takes a minute to get started! Just sign in with SSO using your GitHub account.
+
 ## Newsletter
 
 Sign up for [our newsletter][newsletter] that covers everything on our technology radar.  Receive updates on what we're up to on GitHub as well as awesome new projects we discover. 
@@ -285,7 +304,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2019 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2020 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
@@ -365,6 +384,7 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [testimonial]: https://cpco.io/leave-testimonial?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elasticache-memcached&utm_content=testimonial
   [office_hours]: https://cloudposse.com/office-hours?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elasticache-memcached&utm_content=office_hours
   [newsletter]: https://cpco.io/newsletter?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elasticache-memcached&utm_content=newsletter
+  [discourse]: https://ask.sweetops.com/?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elasticache-memcached&utm_content=discourse
   [email]: https://cpco.io/email?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elasticache-memcached&utm_content=email
   [commercial_support]: https://cpco.io/commercial-support?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elasticache-memcached&utm_content=commercial_support
   [we_love_open_source]: https://cpco.io/we-love-open-source?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elasticache-memcached&utm_content=we_love_open_source

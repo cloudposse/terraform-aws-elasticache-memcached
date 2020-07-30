@@ -163,3 +163,9 @@ variable "elasticache_parameter_group_family" {
   description = "ElastiCache parameter group family"
   default     = "memcached1.5"
 }
+
+variable "label_order" {
+  type        = list(string)
+  default     = []
+  description = "The naming order of the id output and Name tag"
+}

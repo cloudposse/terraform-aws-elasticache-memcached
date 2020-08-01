@@ -33,6 +33,7 @@
 | engine\_version | Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html | `string` | `"1.5.16"` | no |
 | existing\_security\_groups | List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the cluster | `list(string)` | `[]` | no |
 | instance\_type | Elastic cache instance type | `string` | `"cache.t2.micro"` | no |
+| label\_order | The naming order of the id output and Name tag | `list(string)` | `[]` | no |
 | maintenance\_window | Maintenance window | `string` | `"wed:03:00-wed:04:00"` | no |
 | max\_item\_size | Max item size | `number` | `10485760` | no |
 | name | Name of the application | `string` | n/a | yes |

@@ -137,19 +137,20 @@ Available targets:
 
 ```
 <!-- markdownlint-restore -->
+<!-- markdownlint-disable -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.0, < 0.14.0 |
-| aws | ~> 2.0 |
+| aws | >= 2.0 |
 | null | ~> 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.0 |
+| aws | >= 2.0 |
 | null | ~> 2.0 |
 
 ## Inputs
@@ -197,6 +198,7 @@ Available targets:
 | hostname | Cluster hostname |
 | security\_group\_id | Security Group ID |
 
+<!-- markdownlint-restore -->
 
 
 

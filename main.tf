@@ -98,7 +98,7 @@ resource "aws_elasticache_cluster" "default" {
   notification_topic_arn       = var.notification_topic_arn
   port                         = var.port
   az_mode                      = var.cluster_size == 1 ? "single-az" : "cross-az"
-  preferred_availability_zones = slice(var.availability_zones, 0, var.cluster_size)
+  preferred_availability_zones = [for n in range(0, var.cluster_size) : element(var.availability_zones, n)]
   tags                         = module.this.tags
 }
 

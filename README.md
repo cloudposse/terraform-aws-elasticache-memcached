@@ -183,6 +183,25 @@ Available targets:
 | aws | >= 2.0 |
 | null | >= 2.0 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| dns | cloudposse/route53-cluster-hostname/aws | 0.12.0 |
+| this | cloudposse/label/null | 0.24.1 |
+
+## Resources
+
+| Name |
+|------|
+| [aws_cloudwatch_metric_alarm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) |
+| [aws_elasticache_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_cluster) |
+| [aws_elasticache_parameter_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_parameter_group) |
+| [aws_elasticache_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_subnet_group) |
+| [aws_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) |
+| [aws_security_group_rule](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) |
+| [null_resource](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -234,7 +253,6 @@ Available targets:
 | cluster\_urls | Cluster URLs |
 | hostname | Cluster hostname |
 | security\_group\_id | Security Group ID |
-
 <!-- markdownlint-restore -->
 
 

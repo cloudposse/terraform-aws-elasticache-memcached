@@ -70,9 +70,22 @@ variable "apply_immediately" {
   description = "Specifies whether any database modifications are applied immediately, or during the next maintenance window"
 }
 
+variable "availability_zone" {
+  type        = string
+  default     = ""
+  description = "List of Availability Zones for the cluster"
+}
+
 variable "availability_zones" {
   type        = list(string)
+  default     = []
   description = "List of Availability Zones for the cluster"
+}
+
+variable "az_mode" {
+  type        = string
+  default     = "single-az"
+  description = "Enable or disable multiple AZs, eg: single-az or cross-az"
 }
 
 variable "zone_id" {

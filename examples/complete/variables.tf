@@ -3,6 +3,12 @@ variable "region" {
   description = "AWS region"
 }
 
+variable "az_mode" {
+  type        = string
+  default     = "cross-az"
+  description = "Enable or disable multiple AZs, eg: single-az or cross-az"
+}
+
 variable "availability_zones" {
   type        = list(string)
   description = "Availability zone IDs"

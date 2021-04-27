@@ -9,9 +9,10 @@ variable "az_mode" {
   description = "Enable or disable multiple AZs, eg: single-az or cross-az"
 }
 
-variable "availability_zones" {
-  type        = list(string)
-  description = "Availability zone IDs"
+variable "availability_zone" {
+  type        = string
+  default     = ""
+  description = "The Availability Zone of the cluster. az_mode must be set to single-az when used."
 }
 
 variable "vpc_id" {

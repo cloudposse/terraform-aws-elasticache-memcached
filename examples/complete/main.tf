@@ -26,7 +26,7 @@ module "subnets" {
 module "memcached" {
   source                  = "../../"
   az_mode                 = var.az_mode
-  availability_zones      = var.availability_zones
+  availability_zone      = var.availability_zone
   vpc_id                  = module.vpc.vpc_id
   allowed_security_groups = [module.vpc.vpc_default_security_group_id]
   subnets                 = module.subnets.private_subnet_ids

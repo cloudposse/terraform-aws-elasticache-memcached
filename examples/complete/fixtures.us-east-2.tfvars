@@ -2,6 +2,8 @@ region = "us-east-2"
 
 availability_zone = "us-east-2a"
 
+availability_zones = ["us-east-2a"]
+
 namespace = "eg"
 
 stage = "test"

@@ -15,6 +15,12 @@ variable "availability_zone" {
   description = "The Availability Zone of the cluster. az_mode must be set to single-az when used."
 }
 
+variable "availability_zones" {
+  type        = list(string)
+  default     = []
+  description = "List of Availability Zones for the cluster. az_mode must be set to cross-az when used."
+}
+
 variable "vpc_id" {
   type        = string
   default     = ""

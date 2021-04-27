@@ -5,7 +5,7 @@ variable "region" {
 
 variable "az_mode" {
   type        = string
-  default     = "cross-az"
+  default     = "single-az"
   description = "Enable or disable multiple AZs, eg: single-az or cross-az"
 }
 

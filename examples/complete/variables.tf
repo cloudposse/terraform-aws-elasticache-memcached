@@ -3,9 +3,22 @@ variable "region" {
   description = "AWS region"
 }
 
+variable "az_mode" {
+  type        = string
+  default     = "single-az"
+  description = "Enable or disable multiple AZs, eg: single-az or cross-az"
+}
+
+variable "availability_zone" {
+  type        = string
+  default     = ""
+  description = "The Availability Zone of the cluster. az_mode must be set to single-az when used."
+}
+
 variable "availability_zones" {
   type        = list(string)
-  description = "Availability zone IDs"
+  default     = []
+  description = "List of Availability Zones for the cluster. az_mode must be set to cross-az when used."
 }
 
 variable "vpc_id" {

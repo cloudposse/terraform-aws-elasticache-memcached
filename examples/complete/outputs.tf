@@ -23,6 +23,21 @@ output "security_group_id" {
   description = "Security Group ID"
 }
 
+output "security_group_id" {
+  value       = module.memcached.security_group_id
+  description = "Memcached Security Group ID"
+}
+
+output "security_group_arn" {
+  value       = module.memcached.security_group_arn
+  description = "Memcached Security Group ARN"
+}
+
+output "security_group_name" {
+  value       = module.memcached.security_group_name
+  description = "Memcached Security Group name"
+}
+
 output "cluster_address" {
   value       = module.memcached.cluster_address
   description = "Cluster address"

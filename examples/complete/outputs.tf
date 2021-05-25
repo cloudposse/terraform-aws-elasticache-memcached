@@ -20,11 +20,6 @@ output "cluster_id" {
 
 output "security_group_id" {
   value       = module.memcached.security_group_id
-  description = "Security Group ID"
-}
-
-output "security_group_id" {
-  value       = module.memcached.security_group_id
   description = "Memcached Security Group ID"
 }
 

@@ -82,6 +82,7 @@ resource "aws_elasticache_parameter_group" "default" {
   count  = var.enabled && !var.use_existing_parameter_group ? 1 : 0
   name   = module.label.id
   family = var.elasticache_parameter_group_family
+  tags   = module.label.tags
 
   parameter {
     name  = "max_item_size"

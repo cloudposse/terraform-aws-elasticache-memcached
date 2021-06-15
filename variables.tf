@@ -100,28 +100,47 @@ variable "port" {
   description = "Memcached port"
 }
 
-variable "use_existing_security_groups" {
+variable "security_group_enabled" {
   type        = bool
-  description = "Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the cluster into"
+  description = "Whether to create default Security Group for ElastiCache."
+  default     = true
+}
+
+variable "security_group_description" {
+  type        = string
+  default     = "ElastiCache Security Group"
+  description = "The Security Group description."
+}
+
+variable "security_group_use_name_prefix" {
+  type        = bool
   default     = false
+  description = "Whether to create a default Security Group with unique name beginning with the normalized prefix."
 }
 
-variable "existing_security_groups" {
-  type        = list(string)
-  default     = []
-  description = "List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the cluster"
+variable "security_group_rules" {
+  type = list(any)
+  default = [
+    {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 65535
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow all outbound traffic"
+    }
+  ]
+  description = <<-EOT
+    A list of maps of Security Group rules. 
+    The values of map is fully complated with `aws_security_group_rule` resource. 
+    To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule .
+  EOT
 }
 
-variable "allowed_security_groups" {
+variable "security_groups" {
+  description = "A list of Security Group IDs to associate with ElastiCache."
   type        = list(string)
   default     = []
-  description = "List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module"
-}
-
-variable "allowed_cidr_blocks" {
-  type        = list(string)
-  default     = []
-  description = "List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module"
 }
 
 variable "elasticache_subnet_group_name" {

@@ -1,4 +1,4 @@
-module github.com/cloudposse/terraform-aws-elasticache-memcached
+module github.com/cloudposse/terraform-aws-elasticache-redis
 
 go 1.16
 

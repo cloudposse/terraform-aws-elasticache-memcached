@@ -123,12 +123,13 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 }
 
 module "dns" {
-  source  = "cloudposse/route53-cluster-hostname/aws"
-  version = "0.12.2"
-  enabled = local.enabled && var.zone_id != "" ? true : false
-  ttl     = 60
-  zone_id = var.zone_id
-  records = [join("", aws_elasticache_cluster.default.*.cluster_address)]
+  source   = "cloudposse/route53-cluster-hostname/aws"
+  version  = "0.12.2"
+  enabled  = local.enabled && var.zone_id != "" ? true : false
+  dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.id
+  ttl      = 60
+  zone_id  = var.zone_id
+  records  = [join("", aws_elasticache_cluster.default.*.cluster_address)]
 
   context = module.this.context
 }

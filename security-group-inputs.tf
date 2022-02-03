@@ -50,7 +50,7 @@ variable "security_group_name" {
 
 variable "security_group_description" {
   type        = string
-  default     = "Security group for Elasticache Redis"
+  default     = "Security group for Elasticache Memcached"
   description = <<-EOT
     The description to assign to the created Security Group.
     Warning: Changing the description causes the security group to be replaced.

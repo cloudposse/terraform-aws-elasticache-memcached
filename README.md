@@ -105,34 +105,45 @@ For automated tests of the complete example using [bats](https://github.com/bats
     region = var.region
   }
 
-  module "vpc" {
-    source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.1"
+  module "this" {
+    source  = "cloudposse/label/null"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
     namespace  = var.namespace
     stage      = var.stage
     name       = var.name
+  }
+
+  module "vpc" {
+    source = "cloudposse/vpc/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
+
     cidr_block = "172.16.0.0/16"
+
+    context = module.this.context
   }
 
   module "subnets" {
-    source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.18.1"
+    source = "cloudposse/dynamic-subnets/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version = "x.x.x"
+
     availability_zones   = var.availability_zones
-    namespace            = var.namespace
-    stage                = var.stage
-    name                 = var.name
     vpc_id               = module.vpc.vpc_id
     igw_id               = module.vpc.igw_id
     cidr_block           = module.vpc.vpc_cidr_block
-    nat_gateway_enabled  = false
+    nat_gateway_enabled  = true
     nat_instance_enabled = false
+
+    context = module.this.context
   }
 
   module "memcached" {
     source = "cloudposse/elasticache-memcached/aws"
     # Cloud Posse recommends pinning every module to a specific version
     # version = "x.x.x"
-    namespace               = var.namespace
-    stage                   = var.stage
-    name                    = var.name
+
     availability_zones      = var.availability_zones
     vpc_id                  = module.vpc.vpc_id
     allowed_security_groups = [module.vpc.vpc_default_security_group_id]
@@ -142,6 +153,10 @@ For automated tests of the complete example using [bats](https://github.com/bats
     engine_version          = var.engine_version
     apply_immediately       = true
     zone_id                 = var.zone_id
+
+    elasticache_parameter_group_family = var.elasticache_parameter_group_family
+
+    context = module.this.context
   }
 ```
 
@@ -150,7 +165,7 @@ For automated tests of the complete example using [bats](https://github.com/bats
 
 ## Examples
 
-Review the [complete example](examples/simple) to see how to use this module.
+Review the [complete example](examples/complete) to see how to use this module.
 
 
 
@@ -418,8 +433,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 ### Contributors
 
 <!-- markdownlint-disable -->
-|  [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] |
-|---|---|---|
+|  [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Dan Meyers][danjbh_avatar]][danjbh_homepage]<br/>[Dan Meyers][danjbh_homepage] |
+|---|---|---|---|
 <!-- markdownlint-restore -->
 
   [goruha_homepage]: https://github.com/goruha
@@ -428,6 +443,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
   [osterman_homepage]: https://github.com/osterman
   [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png
+  [danjbh_homepage]: https://github.com/danjbh
+  [danjbh_avatar]: https://img.cloudposse.com/150x150/https://github.com/danjbh.png
 
 [![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]

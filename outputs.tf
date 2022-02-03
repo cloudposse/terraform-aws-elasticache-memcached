@@ -4,18 +4,8 @@ output "cluster_id" {
 }
 
 output "security_group_id" {
-  value       = module.security_group.id
-  description = "Cluster Security Group ID"
-}
-
-output "security_group_arn" {
-  value       = module.security_group.arn
-  description = "Cluster Security Group ARN"
-}
-
-output "security_group_name" {
-  value       = module.security_group.name
-  description = "Cluster Security Group name"
+  value       = join("", aws_security_group.default.*.id)
+  description = "Security Group ID"
 }
 
 output "cluster_address" {

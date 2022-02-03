@@ -105,6 +105,30 @@ variable "port" {
   description = "Memcached port"
 }
 
+variable "use_existing_security_groups" {
+  type        = bool
+  description = "Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the cluster into"
+  default     = false
+}
+
+variable "existing_security_groups" {
+  type        = list(string)
+  default     = []
+  description = "List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the cluster"
+}
+
+variable "allowed_security_groups" {
+  type        = list(string)
+  default     = []
+  description = "List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module"
+}
+
+variable "allowed_cidr_blocks" {
+  type        = list(string)
+  default     = []
+  description = "List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module"
+}
+
 variable "elasticache_subnet_group_name" {
   type        = string
   description = "Subnet group name for the ElastiCache instance"

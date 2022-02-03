@@ -3,16 +3,18 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "cloudposse/vpc/aws"
-  version    = "0.18.1"
+  source  = "cloudposse/vpc/aws"
+  version = "0.28.0"
+
   cidr_block = "172.16.0.0/16"
 
   context = module.this.context
 }
 
 module "subnets" {
-  source               = "cloudposse/dynamic-subnets/aws"
-  version              = "0.33.0"
+  source  = "cloudposse/dynamic-subnets/aws"
+  version = "0.39.7"
+
   availability_zones   = var.availability_zones
   vpc_id               = module.vpc.vpc_id
   igw_id               = module.vpc.igw_id
@@ -35,6 +37,8 @@ module "memcached" {
   engine_version          = var.engine_version
   apply_immediately       = true
   zone_id                 = var.zone_id
+
+  elasticache_parameter_group_family = var.elasticache_parameter_group_family
 
   context = module.this.context
 }

@@ -8,6 +8,11 @@ output "security_group_id" {
   description = "The ID of the created security group"
 }
 
+output "security_group_arn" {
+  value       = join("", module.aws_security_group.*.arn)
+  description = "The ARN of the created security group"
+}
+
 output "security_group_name" {
   value       = module.aws_security_group.name
   description = "The name of the created security group"

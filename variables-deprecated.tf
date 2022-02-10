@@ -26,12 +26,3 @@ variable "allowed_security_groups" {
     DEPRECATED: Use `allowed_security_group_ids` instead.
     EOT
 }
-
-variable "allowed_cidr_blocks" {
-  type        = list(string)
-  default     = []
-  description = <<-EOT
-    DEPRECATED: Use `additional_security_group_rules` instead.
-    Historical description: List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module
-    EOT
-}

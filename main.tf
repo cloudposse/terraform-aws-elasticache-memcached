@@ -23,18 +23,23 @@ resource "null_resource" "cluster_urls" {
 # Security Group Resources
 #
 locals {
-  legacy_cidr_ingress_rule = length(var.allowed_cidr_blocks) == 0 ? null : {
-    key         = "legacy-cidr-ingress"
+  cidr_ingress_rule = (
+    length(var.allowed_cidr_blocks) + length(var.allowed_ipv6_cidr_blocks) + length(var.allowed_ipv6_prefix_list_ids)) == 0 ? null : {
+    key         = "cidr-ingress"
     type        = "ingress"
     from_port   = var.port
     to_port     = var.port
     protocol    = "tcp"
     cidr_blocks = var.allowed_cidr_blocks
+
+    allowed_ipv6_cidr_blocks     = var.allowed_ipv6_cidr_blocks
+    allowed_ipv6_prefix_list_ids = var.allowed_ipv6_prefix_list_ids
+
     description = "Allow inbound traffic from CIDR blocks"
   }
 
   sg_rules = {
-    legacy = merge(local.legacy_cidr_ingress_rule, {})
+    legacy = merge(local.cidr_ingress_rule, {})
     extra  = var.additional_security_group_rules
   }
 }
@@ -51,7 +56,6 @@ module "aws_security_group" {
   rule_matrix = [{
     key                       = "in"
     source_security_group_ids = local.allowed_security_group_ids
-    cidr_blocks               = var.allowed_cidr_blocks
     rules = [{
       key         = "in"
       type        = "ingress"

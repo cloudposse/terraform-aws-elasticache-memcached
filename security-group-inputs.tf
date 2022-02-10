@@ -1,4 +1,4 @@
-# security_group_inputs Version: 1
+# security_group_inputs Version: 2
 ##
 
 
@@ -17,7 +17,7 @@ variable "associated_security_group_ids" {
   default     = []
   description = <<-EOT
     A list of IDs of Security Groups to associate the created resource with, in addition to the created security group.
-    These security groups will not be modified and, if `create_security_group` is `false`, must provide all the required access.
+    These security groups will not be modified and, if `create_security_group` is `false`, must have rules providing the desired access.
     EOT
 }
 
@@ -30,13 +30,40 @@ variable "allowed_security_group_ids" {
   default     = []
   description = <<-EOT
     A list of IDs of Security Groups to allow access to the security group created by this module.
-  EOT
+    The length of this list must be known at "plan" time.
+    EOT
 }
 
 locals {
   allowed_security_group_ids = concat(var.allowed_security_groups, var.allowed_security_group_ids)
 }
 
+variable "allowed_cidr_blocks" {
+  type        = list(string)
+  default     = []
+  description = <<-EOT
+    A list of IPv4 CIDRs to allow access to the security group created by this module.
+    The length of this list must be known at "plan" time.
+    EOT
+}
+
+variable "allowed_ipv6_cidr_blocks" {
+  type        = list(string)
+  default     = []
+  description = <<-EOT
+    A list of IPv6 CIDRs to allow access to the security group created by this module.
+    The length of this list must be known at "plan" time.
+    EOT
+}
+
+variable "allowed_ipv6_prefix_list_ids" {
+  type        = list(string)
+  default     = []
+  description = <<-EOT
+    A list of IPv6 Prefix Lists IDs to allow access to the security group created by this module.
+    The length of this list must be known at "plan" time.
+    EOT
+}
 
 variable "security_group_name" {
   type        = list(string)
@@ -54,7 +81,6 @@ variable "security_group_description" {
   description = <<-EOT
     The description to assign to the created Security Group.
     Warning: Changing the description causes the security group to be replaced.
-    Set this to `null` to maintain parity with releases <= `0.34.0`.
     EOT
 }
 
@@ -86,7 +112,6 @@ variable "security_group_delete_timeout" {
     How long to retry on `DependencyViolation` errors during security group deletion.
     EOT
 }
-
 
 variable "allow_all_egress" {
   type        = bool

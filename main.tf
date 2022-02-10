@@ -22,45 +22,60 @@ resource "null_resource" "cluster_urls" {
 #
 # Security Group Resources
 #
+locals {
+  cidr_ingress_rule = (
+    length(var.allowed_cidr_blocks) + length(var.allowed_ipv6_cidr_blocks) + length(var.allowed_ipv6_prefix_list_ids)) == 0 ? null : {
+    key         = "cidr-ingress"
+    type        = "ingress"
+    from_port   = var.port
+    to_port     = var.port
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_cidr_blocks
 
-resource "aws_security_group" "default" {
-  count  = local.enabled && var.use_existing_security_groups == false ? 1 : 0
+    allowed_ipv6_cidr_blocks     = var.allowed_ipv6_cidr_blocks
+    allowed_ipv6_prefix_list_ids = var.allowed_ipv6_prefix_list_ids
+
+    description = "Allow inbound traffic from CIDR blocks"
+  }
+
+  sg_rules = {
+    legacy = merge(local.cidr_ingress_rule, {})
+    extra  = var.additional_security_group_rules
+  }
+}
+
+module "aws_security_group" {
+  source  = "cloudposse/security-group/aws"
+  version = "0.4.3"
+
+  enabled = local.create_security_group
+
+  allow_all_egress    = var.allow_all_egress
+  security_group_name = var.security_group_name
+  rules_map           = local.sg_rules
+  rule_matrix = [{
+    key                       = "in"
+    source_security_group_ids = local.allowed_security_group_ids
+    rules = [{
+      key         = "in"
+      type        = "ingress"
+      from_port   = var.port
+      to_port     = var.port
+      protocol    = "tcp"
+      description = "Selectively allow inbound traffic"
+    }]
+  }]
+
   vpc_id = var.vpc_id
-  name   = module.this.id
-  tags   = module.this.tags
-}
 
-resource "aws_security_group_rule" "egress" {
-  count             = local.enabled && var.use_existing_security_groups == false ? 1 : 0
-  description       = "Allow all egress traffic"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
-  type              = "egress"
-}
+  security_group_description = local.security_group_description
 
-resource "aws_security_group_rule" "ingress_security_groups" {
-  count                    = local.enabled && var.use_existing_security_groups == false ? length(var.allowed_security_groups) : 0
-  description              = "Allow inbound traffic from existing Security Groups"
-  from_port                = var.port
-  to_port                  = var.port
-  protocol                 = "tcp"
-  source_security_group_id = var.allowed_security_groups[count.index]
-  security_group_id        = join("", aws_security_group.default.*.id)
-  type                     = "ingress"
-}
+  create_before_destroy = var.security_group_create_before_destroy
 
-resource "aws_security_group_rule" "ingress_cidr_blocks" {
-  count             = local.enabled && var.use_existing_security_groups == false && length(var.allowed_cidr_blocks) > 0 ? 1 : 0
-  description       = "Allow inbound traffic from CIDR blocks"
-  from_port         = var.port
-  to_port           = var.port
-  protocol          = "tcp"
-  cidr_blocks       = var.allowed_cidr_blocks
-  security_group_id = join("", aws_security_group.default.*.id)
-  type              = "ingress"
+  security_group_create_timeout = var.security_group_create_timeout
+  security_group_delete_timeout = var.security_group_delete_timeout
+
+  context = module.this.context
 }
 
 #
@@ -84,16 +99,19 @@ resource "aws_elasticache_parameter_group" "default" {
 }
 
 resource "aws_elasticache_cluster" "default" {
-  count                        = local.enabled ? 1 : 0
-  apply_immediately            = var.apply_immediately
-  cluster_id                   = module.this.id
-  engine                       = "memcached"
-  engine_version               = var.engine_version
-  node_type                    = var.instance_type
-  num_cache_nodes              = var.cluster_size
-  parameter_group_name         = join("", aws_elasticache_parameter_group.default.*.name)
-  subnet_group_name            = local.elasticache_subnet_group_name
-  security_group_ids           = var.use_existing_security_groups ? var.existing_security_groups : [join("", aws_security_group.default.*.id)]
+  count                = local.enabled ? 1 : 0
+  apply_immediately    = var.apply_immediately
+  cluster_id           = module.this.id
+  engine               = "memcached"
+  engine_version       = var.engine_version
+  node_type            = var.instance_type
+  num_cache_nodes      = var.cluster_size
+  parameter_group_name = join("", aws_elasticache_parameter_group.default.*.name)
+  subnet_group_name    = local.elasticache_subnet_group_name
+  # It would be nice to remove null or duplicate security group IDs, if there are any, using `compact`,
+  # but that causes problems, and having duplicates does not seem to cause problems.
+  # See https://github.com/hashicorp/terraform/issues/29799
+  security_group_ids           = local.create_security_group ? concat(local.associated_security_group_ids, [module.aws_security_group.id]) : local.associated_security_group_ids
   maintenance_window           = var.maintenance_window
   notification_topic_arn       = var.notification_topic_arn
   port                         = var.port
@@ -107,7 +125,7 @@ resource "aws_elasticache_cluster" "default" {
 # CloudWatch Resources
 #
 resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
-  count               = local.enabled ? 1 : 0
+  count               = local.enabled && var.cloudwatch_metric_alarms_enabled ? 1 : 0
   alarm_name          = "${module.this.id}-cpu-utilization"
   alarm_description   = "Memcached cluster CPU utilization"
   comparison_operator = "GreaterThanThreshold"
@@ -128,7 +146,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
-  count               = local.enabled ? 1 : 0
+  count               = local.enabled && var.cloudwatch_metric_alarms_enabled ? 1 : 0
   alarm_name          = "${module.this.id}-freeable-memory"
   alarm_description   = "Memcached cluster freeable memory"
   comparison_operator = "LessThanThreshold"
@@ -149,12 +167,13 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 }
 
 module "dns" {
-  source  = "cloudposse/route53-cluster-hostname/aws"
-  version = "0.12.0"
-  enabled = local.enabled && var.zone_id != "" ? true : false
-  ttl     = 60
-  zone_id = var.zone_id
-  records = [join("", aws_elasticache_cluster.default.*.cluster_address)]
+  source   = "cloudposse/route53-cluster-hostname/aws"
+  version  = "0.12.0"
+  enabled  = module.this.enabled && length(var.zone_id) > 0 ? true : false
+  dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.id
+  ttl      = 60
+  zone_id  = var.zone_id
+  records  = [join("", aws_elasticache_cluster.default.*.cluster_address)]
 
   context = module.this.context
 }

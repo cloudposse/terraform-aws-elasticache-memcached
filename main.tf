@@ -92,9 +92,12 @@ resource "aws_elasticache_parameter_group" "default" {
   name   = module.this.id
   family = var.elasticache_parameter_group_family
 
-  parameter {
-    name  = "max_item_size"
-    value = var.max_item_size
+  dynamic "parameter" {
+    for_each = var.parameter
+    content {
+      name  = parameter.value.name
+      value = tostring(parameter.value.value)
+    }
   }
 }
 

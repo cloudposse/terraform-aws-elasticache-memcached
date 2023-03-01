@@ -123,7 +123,7 @@ variable "elasticache_parameters" {
       value = 10485760
     },
   ]
-  description = "A list of Memcached parameters to apply. Note that parameters may differ from one Memcached family to another"
+  description = "A list of ElastiCache parameters to apply. Note that parameters may differ from one ElastiCache family to another"
 }
 
 variable "cloudwatch_metric_alarms_enabled" {

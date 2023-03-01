@@ -4,20 +4,6 @@ variable "vpc_id" {
   description = "VPC ID"
 }
 
-variable "parameter" {
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default = [
-    {
-      name  = "max_item_size"
-      value = 10485760
-    },
-  ]
-  description = "A list of Memcached parameters to apply. Note that parameters may differ from one Memcached family to another"
-}
-
 variable "subnets" {
   type        = list(string)
   default     = []
@@ -124,6 +110,15 @@ variable "elasticache_parameter_group_family" {
   type        = string
   description = "ElastiCache parameter group family"
   default     = "memcached1.5"
+}
+
+variable "elasticache_parameters" {
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+  description = "A list of Memcached parameters to apply. Note that parameters may differ from one Memcached family to another"
 }
 
 variable "cloudwatch_metric_alarms_enabled" {

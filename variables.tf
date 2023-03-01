@@ -126,20 +126,6 @@ variable "elasticache_parameters" {
   description = "A list of Memcached parameters to apply. Note that parameters may differ from one Memcached family to another"
 }
 
-variable "parameter" {
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default = [
-    {
-      name  = "max_item_size"
-      value = 10485760
-    },
-  ]
-  description = "A list of Memcached parameters to apply. Note that parameters may differ from one Memcached family to another"
-}
-
 variable "cloudwatch_metric_alarms_enabled" {
   type        = bool
   description = "Boolean flag to enable/disable CloudWatch metrics alarms"

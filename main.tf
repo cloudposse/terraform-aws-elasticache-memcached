@@ -93,7 +93,7 @@ resource "aws_elasticache_parameter_group" "default" {
   family = var.elasticache_parameter_group_family
 
   dynamic "parameter" {
-    for_each = var.parameter
+    for_each = var.elasticache_parameters
     content {
       name  = parameter.value.name
       value = tostring(parameter.value.value)

@@ -48,5 +48,5 @@ variable "zone_id" {
 variable "elasticache_parameter_group_family" {
   type        = string
   description = "ElastiCache parameter group family"
-  default     = "memcached1[5]"
+  default     = "memcached1.5"
 }

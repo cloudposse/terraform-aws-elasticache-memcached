@@ -115,7 +115,7 @@ variable "elasticache_subnet_group_name" {
 variable "elasticache_parameter_group_family" {
   type        = string
   description = "ElastiCache parameter group family"
-  default     = "memcached1[5]"
+  default     = "memcached1.5"
 }
 
 variable "cloudwatch_metric_alarms_enabled" {

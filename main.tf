@@ -1,5 +1,5 @@
 locals {
-  elasticache_subnet_group_name = var.elasticache_subnet_group_name != "" ? var.elasticache_subnet_group_name : join("", aws_elasticache_subnet_group.default.*.name)
+  elasticache_subnet_group_name = var.elasticache_subnet_group_name != "" ? var.elasticache_subnet_group_name : join("", aws_elasticache_subnet_group.default[*].name)
   enabled                       = module.this.enabled
 }
 
@@ -8,7 +8,7 @@ resource "null_resource" "cluster_urls" {
 
   triggers = {
     name = "${replace(
-      join("", aws_elasticache_cluster.default.*.cluster_address),
+      join("", aws_elasticache_cluster.default[*].cluster_address),
       ".cfg.",
       format(".%04d.", count.index + 1)
     )}:${var.port}"
@@ -106,7 +106,7 @@ resource "aws_elasticache_cluster" "default" {
   engine_version       = var.engine_version
   node_type            = var.instance_type
   num_cache_nodes      = var.cluster_size
-  parameter_group_name = join("", aws_elasticache_parameter_group.default.*.name)
+  parameter_group_name = join("", aws_elasticache_parameter_group.default[*].name)
   subnet_group_name    = local.elasticache_subnet_group_name
   # It would be nice to remove null or duplicate security group IDs, if there are any, using `compact`,
   # but that causes problems, and having duplicates does not seem to cause problems.
@@ -173,7 +173,7 @@ module "dns" {
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.id
   ttl      = 60
   zone_id  = var.zone_id
-  records  = [join("", aws_elasticache_cluster.default.*.cluster_address)]
+  records  = [join("", aws_elasticache_cluster.default[*].cluster_address)]
 
   context = module.this.context
 }

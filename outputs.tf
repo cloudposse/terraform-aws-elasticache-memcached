@@ -9,7 +9,7 @@ output "security_group_id" {
 }
 
 output "security_group_arn" {
-  value       = try(module.aws_security_group[*].arn, null)
+  value       = module.aws_security_group.arn
   description = "The ARN of the created security group"
 }
 

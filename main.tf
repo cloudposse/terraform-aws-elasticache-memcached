@@ -46,7 +46,7 @@ locals {
 
 module "aws_security_group" {
   source  = "cloudposse/security-group/aws"
-  version = "1.0.1"
+  version = "2.2.0"
 
   enabled = local.create_security_group
 
@@ -168,7 +168,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 
 module "dns" {
   source   = "cloudposse/route53-cluster-hostname/aws"
-  version  = "0.12.0"
+  version  = "0.13.0"
   enabled  = module.this.enabled && length(var.zone_id) > 0 ? true : false
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.id
   ttl      = 60

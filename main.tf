@@ -99,15 +99,16 @@ resource "aws_elasticache_parameter_group" "default" {
 }
 
 resource "aws_elasticache_cluster" "default" {
-  count                = local.enabled ? 1 : 0
-  apply_immediately    = var.apply_immediately
-  cluster_id           = module.this.id
-  engine               = "memcached"
-  engine_version       = var.engine_version
-  node_type            = var.instance_type
-  num_cache_nodes      = var.cluster_size
-  parameter_group_name = join("", aws_elasticache_parameter_group.default[*].name)
-  subnet_group_name    = local.elasticache_subnet_group_name
+  count                      = local.enabled ? 1 : 0
+  apply_immediately          = var.apply_immediately
+  cluster_id                 = module.this.id
+  engine                     = "memcached"
+  engine_version             = var.engine_version
+  node_type                  = var.instance_type
+  num_cache_nodes            = var.cluster_size
+  parameter_group_name       = join("", aws_elasticache_parameter_group.default[*].name)
+  transit_encryption_enabled = var.transit_encryption_enabled
+  subnet_group_name          = local.elasticache_subnet_group_name
   # It would be nice to remove null or duplicate security group IDs, if there are any, using `compact`,
   # but that causes problems, and having duplicates does not seem to cause problems.
   # See https://github.com/hashicorp/terraform/issues/29799

@@ -131,3 +131,9 @@ variable "cloudwatch_metric_alarms_enabled" {
   description = "Boolean flag to enable/disable CloudWatch metrics alarms"
   default     = false
 }
+
+variable "transit_encryption_enabled" {
+  type        = bool
+  description = "Enable encryption in-transit. Supported only with Memcached versions 1.6.12 and later, running in a VPC"
+  default     = false
+}

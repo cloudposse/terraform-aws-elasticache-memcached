@@ -27,3 +27,9 @@ output "cluster_urls" {
   value       = null_resource.cluster_urls.*.triggers.name
   description = "Cluster URLs"
 }
+
+output "clusters_cache_node_endpoints" {
+  value = flatten([for cluster in aws_elasticache_cluster.default : [for node in cluster.cache_nodes : node.address]])
+  description = "A list of cache node endpoints"
+}
+

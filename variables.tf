@@ -123,3 +123,9 @@ variable "cloudwatch_metric_alarms_enabled" {
   description = "Boolean flag to enable/disable CloudWatch metrics alarms"
   default     = false
 }
+
+variable "transit_encryption_enabled" {
+  type        = bool
+  description = "Boolean flag to enable transit encryption (requires Memcached version 1.6.12+)"
+  default     = false
+}

@@ -33,3 +33,8 @@ output "clusters_cache_node_endpoints" {
   description = "A list of cache node endpoints"
 }
 
+output "clusters_cache_node_endpoints_with_port" {
+  value = flatten([for cluster in aws_elasticache_cluster.default : [for node in cluster.cache_nodes : "${node.address}:${node.port}"]])
+  description = "A list of cache node endpoints with port"
+}
+

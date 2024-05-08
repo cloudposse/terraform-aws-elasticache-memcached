@@ -82,9 +82,11 @@ module "aws_security_group" {
 # ElastiCache Resources
 #
 resource "aws_elasticache_subnet_group" "default" {
-  count      = local.enabled ? 1 : 0
-  name       = module.this.id
-  subnet_ids = var.subnets
+  count       = local.enabled && var.elasticache_subnet_group_name == "" && length(var.subnets) > 0 ? 1 : 0
+  name        = module.this.id
+  description = "Elasticache subnet group for ${module.this.id}"
+  subnet_ids  = var.subnets
+  tags        = module.this.tags
 }
 
 resource "aws_elasticache_parameter_group" "default" {

@@ -1,5 +1,5 @@
 locals {
-  elasticache_subnet_group_name = var.elasticache_subnet_group_name != "" ? var.elasticache_subnet_group_name : join("", aws_elasticache_subnet_group.default.*.name)
+  elasticache_subnet_group_name = var.elasticache_subnet_group_name != "" ? var.elasticache_subnet_group_name : join("", aws_elasticache_subnet_group.default[*].name)
   enabled                       = module.this.enabled
 }
 
@@ -8,7 +8,7 @@ resource "null_resource" "cluster_urls" {
 
   triggers = {
     name = "${replace(
-      join("", aws_elasticache_cluster.default.*.cluster_address),
+      join("", aws_elasticache_cluster.default[*].cluster_address),
       ".cfg.",
       format(".%04d.", count.index + 1)
     )}:${var.port}"
@@ -46,7 +46,7 @@ locals {
 
 module "aws_security_group" {
   source  = "cloudposse/security-group/aws"
-  version = "1.0.1"
+  version = "2.2.0"
 
   enabled = local.create_security_group
 
@@ -82,9 +82,11 @@ module "aws_security_group" {
 # ElastiCache Resources
 #
 resource "aws_elasticache_subnet_group" "default" {
-  count      = local.enabled ? 1 : 0
-  name       = module.this.id
-  subnet_ids = var.subnets
+  count       = local.enabled && var.elasticache_subnet_group_name == "" && length(var.subnets) > 0 ? 1 : 0
+  name        = module.this.id
+  description = "Elasticache subnet group for ${module.this.id}"
+  subnet_ids  = var.subnets
+  tags        = module.this.tags
 }
 
 resource "aws_elasticache_parameter_group" "default" {
@@ -102,15 +104,16 @@ resource "aws_elasticache_parameter_group" "default" {
 }
 
 resource "aws_elasticache_cluster" "default" {
-  count                = local.enabled ? 1 : 0
-  apply_immediately    = var.apply_immediately
-  cluster_id           = module.this.id
-  engine               = "memcached"
-  engine_version       = var.engine_version
-  node_type            = var.instance_type
-  num_cache_nodes      = var.cluster_size
-  parameter_group_name = join("", aws_elasticache_parameter_group.default.*.name)
-  subnet_group_name    = local.elasticache_subnet_group_name
+  count                      = local.enabled ? 1 : 0
+  apply_immediately          = var.apply_immediately
+  cluster_id                 = module.this.id
+  engine                     = "memcached"
+  engine_version             = var.engine_version
+  node_type                  = var.instance_type
+  num_cache_nodes            = var.cluster_size
+  parameter_group_name       = join("", aws_elasticache_parameter_group.default[*].name)
+  transit_encryption_enabled = var.transit_encryption_enabled
+  subnet_group_name          = local.elasticache_subnet_group_name
   # It would be nice to remove null or duplicate security group IDs, if there are any, using `compact`,
   # but that causes problems, and having duplicates does not seem to cause problems.
   # See https://github.com/hashicorp/terraform/issues/29799
@@ -171,12 +174,12 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 
 module "dns" {
   source   = "cloudposse/route53-cluster-hostname/aws"
-  version  = "0.12.0"
+  version  = "0.13.0"
   enabled  = module.this.enabled && length(var.zone_id) > 0 ? true : false
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.id
   ttl      = 60
   zone_id  = var.zone_id
-  records  = [join("", aws_elasticache_cluster.default.*.cluster_address)]
+  records  = [join("", aws_elasticache_cluster.default[*].cluster_address)]
 
   context = module.this.context
 }

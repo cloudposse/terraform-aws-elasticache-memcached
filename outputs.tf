@@ -1,5 +1,5 @@
 output "cluster_id" {
-  value       = join("", aws_elasticache_cluster.default.*.id)
+  value       = join("", aws_elasticache_cluster.default[*].id)
   description = "Cluster ID"
 }
 
@@ -9,7 +9,7 @@ output "security_group_id" {
 }
 
 output "security_group_arn" {
-  value       = join("", module.aws_security_group.*.arn)
+  value       = module.aws_security_group.arn
   description = "The ARN of the created security group"
 }
 
@@ -19,12 +19,12 @@ output "security_group_name" {
 }
 
 output "cluster_address" {
-  value       = join("", aws_elasticache_cluster.default.*.cluster_address)
+  value       = join("", aws_elasticache_cluster.default[*].cluster_address)
   description = "Cluster address"
 }
 
 output "cluster_configuration_endpoint" {
-  value       = join("", aws_elasticache_cluster.default.*.configuration_endpoint)
+  value       = join("", aws_elasticache_cluster.default[*].configuration_endpoint)
   description = "Cluster configuration endpoint"
 }
 
@@ -34,6 +34,6 @@ output "hostname" {
 }
 
 output "cluster_urls" {
-  value       = null_resource.cluster_urls.*.triggers.name
+  value       = null_resource.cluster_urls[*].triggers.name
   description = "Cluster URLs"
 }

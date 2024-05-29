@@ -1,8 +1,11 @@
 package test
 
 import (
+	"strings"
 	"testing"
+	"fmt"
 
+	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 )
@@ -10,6 +13,8 @@ import (
 // Test the Terraform module in examples/complete using Terratest.
 func TestExamplesComplete(t *testing.T) {
 	t.Parallel()
+	randID := strings.ToLower(random.UniqueId())
+	attributes := []string{randID}
 
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
@@ -17,6 +22,9 @@ func TestExamplesComplete(t *testing.T) {
 		Upgrade:      true,
 		// Variables to pass to our Terraform code using -var-file options
 		VarFiles: []string{"fixtures.us-east-2.tfvars"},
+		Vars: map[string]interface{}{
+			"attributes": attributes,
+		},
 	}
 
 	// At the end of the test, run `terraform destroy` to clean up any resources that were created
@@ -43,5 +51,5 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	clusterId := terraform.Output(t, terraformOptions, "cluster_id")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-memcached-test", clusterId)
+	assert.Equal(t, fmt.Sprintf("eg-test-memcached-test-%s", randID), clusterId)
 }

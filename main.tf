@@ -125,7 +125,6 @@ resource "aws_elasticache_cluster" "default" {
   availability_zone            = var.availability_zone
   preferred_availability_zones = var.availability_zones
   tags                         = module.this.tags
-  transit_encryption_enabled   = var.transit_encryption_enabled
 }
 
 #

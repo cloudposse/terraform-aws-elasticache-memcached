@@ -121,6 +121,7 @@ resource "aws_elasticache_cluster" "default" {
   az_mode                      = var.az_mode
   availability_zone            = var.availability_zone
   preferred_availability_zones = var.availability_zones
+  network_type                 = var.network_type
   tags                         = module.this.tags
 }
 

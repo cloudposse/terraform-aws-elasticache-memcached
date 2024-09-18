@@ -16,6 +16,12 @@ variable "subnets" {
   description = "AWS subnet ids"
 }
 
+variable "network_type" {
+  type        = string
+  default     = "ipv4"
+  description = "The network type of the cluster. Valid values: ipv4, ipv6, dual_stack."
+}
+
 variable "maintenance_window" {
   type        = string
   default     = "wed:03:00-wed:04:00"

@@ -98,6 +98,8 @@ resource "aws_elasticache_parameter_group" "default" {
     name  = "max_item_size"
     value = var.max_item_size
   }
+
+  tags = module.this.tags
 }
 
 resource "aws_elasticache_cluster" "default" {
@@ -147,6 +149,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 
   alarm_actions = var.alarm_actions
   depends_on    = [aws_elasticache_cluster.default]
+
+  tags = module.this.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
@@ -168,6 +172,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
 
   alarm_actions = var.alarm_actions
   depends_on    = [aws_elasticache_cluster.default]
+
+  tags = module.this.tags
 }
 
 module "dns" {

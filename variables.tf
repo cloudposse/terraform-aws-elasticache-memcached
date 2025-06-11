@@ -187,3 +187,9 @@ variable "elasticache_parameter_group_name" {
   description = "Existing parameter group for Elasticache instance."
   default     = null
 }
+
+variable "transit_encryption_enabled" {
+  type        = bool
+  description = "Whether to enable transit encryption for the cluster"
+  default     = false
+}

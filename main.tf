@@ -109,6 +109,7 @@ resource "aws_elasticache_cluster" "default" {
   port                         = var.port
   az_mode                      = var.cluster_size == 1 ? "single-az" : "cross-az"
   preferred_availability_zones = [for i in range(var.cluster_size) : element(var.availability_zones, i)]
+  transit_encryption_enabled   = var.transit_encryption_enabled
   tags                         = module.label.tags
 
   lifecycle {

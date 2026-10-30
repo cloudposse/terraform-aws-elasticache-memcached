@@ -3,22 +3,6 @@ locals {
   enabled                       = module.this.enabled
 }
 
-resource "null_resource" "cluster_urls" {
-  count = local.enabled ? var.cluster_size : 0
-
-  triggers = {
-    name = "${replace(
-      join("", aws_elasticache_cluster.default[*].cluster_address),
-      ".cfg.",
-      format(".%04d.", count.index + 1)
-    )}:${var.port}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 #
 # Security Group Resources
 #

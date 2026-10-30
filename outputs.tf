@@ -34,6 +34,6 @@ output "hostname" {
 }
 
 output "cluster_urls" {
-  value       = null_resource.cluster_urls[*].triggers.name
+  value       = [for node in flatten(aws_elasticache_cluster.default[*].cache_nodes) : "${node.address}:${node.port}"]
   description = "Cluster URLs"
 }
